@@ -1,12 +1,14 @@
 const User = require('../models/user');
 
-const ERROR_CODE = 400;
-const NOT_FOUND = 404;
-const ERROR_DEFOULT = 500;
+const {
+  ERROR_CODE,
+  NOT_FOUND,
+  ERROR_DEFOULT,
+} = require('../utils/error');
 
-module.exports.getUsers = (req, res) => {
-  User.find()
-    .then((users) => res.send({ users }))
+module.exports.getUsers = (_req, res) => {
+  User.find({})
+    .then((users) => res.send(users))
     .catch(() => res.status(ERROR_DEFOULT).send({ message: 'Ошибка сервера' }));
 };
 
@@ -24,55 +26,57 @@ module.exports.getUser = (req, res) => {
       if (err.name === 'CastError') {
         return res.status(ERROR_CODE).send({ message: 'Запрашиваемый пользователь не найден' });
       }
-      if (err.name === 'InvalidId') {
-        return res.status(NOT_FOUND).send({ message: err.message });
-      }
-      return res.status(ERROR_DEFOULT).send({ message: err.message });
+      return res.status(ERROR_DEFOULT).send({ message: 'Ошибка на сервере' });
     });
 };
 
 module.exports.createUsers = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
-    .then((newUser) => res.send({ newUser }))
+    .then((user) => res.send({ user }))
     .catch((err) => {
-      if (err.name === 'ValidationError') return res.status(ERROR_CODE).send({ message: err.message });
-      return res.status(ERROR_DEFOULT).send({ message: err.message });
+      if (err.name === 'ValidationError') {
+        return res.status(ERROR_CODE).send({ message: 'пользователь не найден' });
+      }
+      return res.status(ERROR_DEFOULT).send({ message: 'Сбой на сервере' });
     });
 };
 
 module.exports.putchUserProfile = (req, res) => {
-  const { _id } = req.user;
-  const { avatar } = req.body;
-  User.findByIdAndUpdate(_id, { $set: { avatar } }, { new: true, runValidator: true })
+  const { name, about } = req.body;
+  // const { _id } = req.user;
+  // const { avatar } = req.body;
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidator: true })
     .then((userProfile) => {
       if (!userProfile) {
-        return res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
+        res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
+        return;
       }
-      return res.send({ data: userProfile });
+      res.send(userProfile);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE).send({ message: err.message });
+        return res.status(ERROR_CODE).send({ message: 'Некорректные данные' });
       }
-      return res.status(ERROR_DEFOULT).send({ message: err.message });
+      return res.status(ERROR_DEFOULT).send({ message: 'Ошибка сервера' });
     });
 };
 
 module.exports.putchUserAvatar = (req, res) => {
-  const { _id } = req.user;
+  // const { _id } = req.user;
   const { avatar } = req.body;
-  User.findByIdAndUpdate(_id, { $set: { avatar } }, { new: true, runValidator: true })
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidator: true })
     .then((userAvatar) => {
       if (!userAvatar) {
-        return res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
+        res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
+        return;
       }
-      return res.send({ data: userAvatar });
+      res.send(userAvatar);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE).send({ message: err.message });
+        return res.status(ERROR_CODE).send({ message: 'Некорректные данные' });
       }
-      return res.status(ERROR_DEFOULT).send({ message: err.message });
+      return res.status(ERROR_DEFOULT).send({ message: 'Сервер не отвечает' });
     });
 };

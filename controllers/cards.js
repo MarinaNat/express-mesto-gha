@@ -1,8 +1,10 @@
 const Card = require('../models/card');
 
-const ERROR_CODE = 400;
-const NOT_FOUND = 404;
-const ERROR_DEFOULT = 500;
+const {
+  ERROR_CODE,
+  NOT_FOUND,
+  ERROR_DEFOULT,
+} = require('../utils/error');
 
 // Запрос всех карточек
 module.exports.getCards = (req, res) => {
