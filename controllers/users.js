@@ -36,7 +36,7 @@ module.exports.createUsers = (req, res) => {
     .then((user) => res.send({ user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE).send({ message: 'пользователь не найден' });
+        return res.status(NOT_FOUND).send({ message: 'пользователь не найден' });
       }
       return res.status(ERROR_DEFOULT).send({ message: 'Сбой на сервере' });
     });

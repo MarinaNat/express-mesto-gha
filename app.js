@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
   res.send('<h1>Домашняя страница</h1>');
 });
 
-app.get('/', (req, res) => {
+app.all('*', (_req, res) => {
   res.status(404).send({ message: 'Страница не найдена' });
 });
 
