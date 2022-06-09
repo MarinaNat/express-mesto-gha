@@ -6,6 +6,12 @@ const {
   ERROR_DEFOULT,
 } = require('../utils/error');
 
+const errorCard = (errorName, errorMessage) => {
+  const error = new Error(errorMessage.toString());
+  error.name = errorName.toString();
+  return error;
+};
+
 // Запрос всех карточек
 module.exports.getCards = (_req, res) => {
   Card.find({})
@@ -34,6 +40,7 @@ module.exports.deleteCard = (req, res) => {
   // const { _id } = req.user;
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
+      if (req.params.cardId.length < 24) throw errorCard('UndefinedId', 'Такого id не существует');
       if (!card) {
         res.status(NOT_FOUND).send({ message: 'Картока не найдена' });
         return;
@@ -41,9 +48,8 @@ module.exports.deleteCard = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        return res.status(ERROR_CODE).send({ message: 'Некорректные данные' });
-      }
+      if (err.name === 'UndefinedId') return res.status(400).send({ message: err.message });
+      if (err.name === 'InvalidId') return res.status(404).send({ message: err.message });
       return res.status(ERROR_DEFOULT).send({ message: 'Ошибка сервера' });
     });
 };
