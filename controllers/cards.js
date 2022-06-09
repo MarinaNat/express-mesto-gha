@@ -4,25 +4,28 @@ const ERROR_CODE = 400;
 const NOT_FOUND = 404;
 const ERROR_DEFOULT = 500;
 
+// Запрос всех карточек
 module.exports.getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
     .catch((err) => res.status(ERROR_DEFOULT).send({ message: err.message }));
 };
 
+// Создание карточки
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
   const { _id } = req.user;
   Card.create({ name, link, owner: _id })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
         return res.status(ERROR_CODE).send({ message: err.message });
       }
       return res.status(ERROR_DEFOULT).send({ message: err.message });
     });
 };
 
+// Удаление карточки
 module.exports.deleteCard = (req, res) => {
   const { _id } = req.user;
   Card.findOneAndDelete(_id)
@@ -35,6 +38,7 @@ module.exports.deleteCard = (req, res) => {
     .catch((err) => res.status(ERROR_DEFOULT).send({ message: err.message }));
 };
 
+// Добавления лайка
 module.exports.likeCard = (req, res) => {
   const { _id } = req.user;
   const { cardId } = req.params;
@@ -58,6 +62,7 @@ module.exports.likeCard = (req, res) => {
     });
 };
 
+// Снятие лайка с карточки
 module.exports.dislikeCard = (req, res) => {
   const { _id } = req.user;
   const { cardId } = req.params;
