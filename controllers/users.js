@@ -32,13 +32,18 @@ module.exports.getUser = (req, res) => {
 
 module.exports.createUsers = (req, res) => {
   const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
+
+  User.create({
+    name,
+    about,
+    avatar,
+  })
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'Некорректные данные' });
+        return res.status(NOT_FOUND).send({ message: 'Введены некорректные данные' });
       }
-      return res.status(ERROR_DEFOULT).send({ message: 'Сбой на сервере' });
+      return res.status(ERROR_DEFOULT).send({ message: 'Произошла ошибка на сервере, попробуйте еще раз' });
     });
 };
 
