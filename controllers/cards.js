@@ -91,9 +91,8 @@ module.exports.dislikeCard = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        return res.status(ERROR_CODE).send({ message: 'Некорректные данные' });
-      }
-      return res.status(ERROR_DEFOULT).send({ message: 'Ошибка сервера' });
+      if (err.name === 'InvalidId') return res.status(404).send({ message: err.message });
+      if (err.name === 'CastError') return res.status(400).send({ message: err.message });
+      return res.status(500).send({ message: 'Ошибка сервера' });
     });
 };
