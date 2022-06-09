@@ -33,10 +33,10 @@ module.exports.getUser = (req, res) => {
 module.exports.createUsers = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
-    .then((user) => res.send({ user }))
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(NOT_FOUND).send({ message: 'пользователь не найден' });
+        return res.status(ERROR_CODE).send({ message: 'Некорректные данные' });
       }
       return res.status(ERROR_DEFOULT).send({ message: 'Сбой на сервере' });
     });
