@@ -9,20 +9,17 @@ const {
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(() => {
-      res.status(ERROR_DEFOULT).send({ message: 'Произошла ошибка на сервере, попробуйте еще раз' });
-    });
+    .catch(() => res.status(ERROR_DEFOULT).send({ message: 'Произошла ошибка на сервере, попробуйте еще раз' }));
 };
 
 module.exports.getUser = (req, res) => {
-  // const { _id } = req.params;
-  User.findById(req.params.userId)
+  const { userId } = req.params;
+  User.findById(userId)
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
-        return;
+        return res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
       }
-      res.send({ data: user });
+      return res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -46,7 +43,7 @@ module.exports.createUsers = (req, res) => {
 
 module.exports.putchUserProfile = (req, res) => {
   const { name, about } = req.body;
-  const { userId } = req.user;
+  const { userId } = req.user._id;
   // const { avatar } = req.body;
   User.findByIdAndUpdate(userId, { $set: { name, about } }, { new: true, runValidator: true })
     .then((user) => {
@@ -64,15 +61,14 @@ module.exports.putchUserProfile = (req, res) => {
 };
 
 module.exports.putchUserAvatar = (req, res) => {
-  const { userId } = req.user;
+  const userId = req.user._id;
   const { avatar } = req.body;
   User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidator: true })
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
-        return;
+        return res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
       }
-      res.send({ data: user });
+      return res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
