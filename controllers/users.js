@@ -54,11 +54,11 @@ module.exports.putchUserProfile = (req, res) => {
         res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
         return;
       }
-      res.send({ data: user });
+      res.status(200).res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        return res.status(ERROR_CODE).send({ message: 'Некорректные данные' });
+        return res.status(400).send({ message: 'Некорректные данные' });
       }
       return res.status(ERROR_DEFOULT).send({ message: 'Ошибка сервера' });
     });
