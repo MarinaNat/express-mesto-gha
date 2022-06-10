@@ -9,9 +9,8 @@ const { PORT = 3000 } = process.env;
 const app = express();
 
 app.use(express.json());
-
-// подключаемся к серверу mongo
-mongoose.connect('mongodb://localhost:27017/mestodb');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
   req.user = {
@@ -22,18 +21,16 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', (req, res) => {
-  res.send('<h1>Домашняя страница</h1>');
-});
+app.use('/users', userRouter);
+app.use('/cards', cardRouter);
+app.use((req, res) => res.status(404).send({ message: 'Страница не найдена' }));
 
-app.all('/', (_req, res) => {
-  res.status(404).send({ message: 'Страница не найдена' });
-});
+// app.get('/', (req, res) => {
+//   res.send('<h1>Домашняя страница</h1>');
+// });
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use('/', userRouter);
-app.use('/', cardRouter);
+// подключаемся к серверу mongo
+mongoose.connect('mongodb://localhost:27017/mestodb', { useNewUrlParser: true, family: 4 });
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
