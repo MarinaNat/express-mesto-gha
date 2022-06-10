@@ -37,7 +37,7 @@ module.exports.deleteCard = (req, res) => {
       if (!card) {
         return res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
       }
-      return res.status(200).res.send({ message: card });
+      return res.send({ message: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
