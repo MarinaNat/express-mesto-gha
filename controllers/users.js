@@ -48,7 +48,7 @@ module.exports.putchUserProfile = (req, res) => {
   const { name, about } = req.body;
   const { userId } = req.user;
   // const { avatar } = req.body;
-  User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidator: true })
+  User.findByIdAndUpdate(userId, { $set: { name, about } }, { new: true, runValidator: true })
     .then((user) => {
       if (!user) {
         return res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
