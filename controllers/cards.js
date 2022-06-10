@@ -10,7 +10,7 @@ const {
 module.exports.getCards = (req, res) => {
   Card.find({})
     .populate('owner')
-    .then((card) => res.send(card))
+    .then((cards) => res.send({ data: cards }))
     .catch(() => res.status(ERROR_DEFOULT).send({ message: 'Ошибка на сервере' }));
 };
 
@@ -20,7 +20,7 @@ module.exports.createCard = (req, res) => {
   // const { _id } = req.user;
   const owner = req.user._id;
   Card.create({ name, link, owner })
-    .then((card) => res.send(card))
+    .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(ERROR_CODE).send({ message: 'Некорректные данные' });
@@ -31,14 +31,14 @@ module.exports.createCard = (req, res) => {
 
 // Удаление карточки
 module.exports.deleteCard = (req, res) => {
-  // const { _id } = req.user;
-  Card.findByIdAndRemove(req.params.cardId)
+  const { cardId } = req.params;
+  Card.findByIdAndRemove(cardId)
     .then((card) => {
       if (!card) {
         res.status(NOT_FOUND).send({ message: 'Картока не найдена' });
         return;
       }
-      res.send(card);
+      res.send({ message: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -63,7 +63,7 @@ module.exports.likeCard = (req, res) => {
         res.status(NOT_FOUND).send({ message: 'Картока не найдена' });
         return;
       }
-      res.send(card);
+      res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -88,7 +88,7 @@ module.exports.dislikeCard = (req, res) => {
         res.status(NOT_FOUND).send({ message: 'Картока не найдена' });
         return;
       }
-      res.send(card);
+      res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
