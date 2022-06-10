@@ -9,91 +9,74 @@ const {
 // Запрос всех карточек
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .populate('owner')
     .then((cards) => res.send({ data: cards }))
-    .catch(() => res.status(ERROR_DEFOULT).send({ message: 'Ошибка на сервере' }));
+    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
 };
 
 // Создание карточки
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
-  // const { _id } = req.user;
   const owner = req.user._id;
+
   Card.create({ name, link, owner })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE).send({ message: 'Некорректные данные' });
+        return res.status(400).send({ message: 'Переданы некорректные данные' });
       }
-      return res.status(ERROR_DEFOULT).send({ message: 'Ошибка сервера' });
+      return res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
 // Удаление карточки
 module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
+
   Card.findByIdAndRemove(cardId)
     .then((card) => {
       if (!card) {
-        res.status(NOT_FOUND).send({ message: 'Картока не найдена' });
-        return;
+        return res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
       }
-      res.send({ message: card });
+      return res.send({ message: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(ERROR_CODE).send({ message: 'Некорректные данные' });
+        return res.status(400).send({ message: 'Переданы некорректные данные' });
       }
-      return res.status(ERROR_DEFOULT).send({ message: 'Ошибка сервера' });
+      return res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
 // Добавления лайка
 module.exports.likeCard = (req, res) => {
-  // const { _id } = req.user;
-  // const { cardId } = req.params;
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    // добавить _id в массив, если его там нет
-    { $addToSet: { likes: req.user._id } },
-    { new: true },
-  )
-    .then((card) => {
-      if (!card) {
-        res.status(NOT_FOUND).send({ message: 'Картока не найдена' });
-        return;
+  Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+    .then((cardData) => {
+      if (!cardData) {
+        return res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
       }
-      res.send({ data: card });
+      return res.send({ data: cardData });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(ERROR_CODE).send({ message: 'Некорректные данные' });
+        return res.status(400).send({ message: 'Переданы некорректные данные' });
       }
-      return res.status(ERROR_DEFOULT).send({ message: 'Ошибка сервера' });
+      return res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
 // Снятие лайка с карточки
 module.exports.dislikeCard = (req, res) => {
-  // const { _id } = req.user;
-  // const { cardId } = req.params;
-  // убрать _id из массива
-  Card.findOneAndUpdate(
-    req.params.cardId,
-    { $pull: { likes: req.user._id } },
-    { new: true },
-  )
-    .then((card) => {
-      if (!card) {
-        res.status(NOT_FOUND).send({ message: 'Картока не найдена' });
-        return;
+  Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
+    .then((cardData) => {
+      if (!cardData) {
+        return res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
       }
-      res.send({ data: card });
+      return res.send({ data: cardData });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(ERROR_CODE).send({ message: 'Некорректные данные' });
+        return res.status(400).send({ message: 'Переданы некорректные данные' });
       }
-      return res.status(ERROR_DEFOULT).send({ message: 'Ошибка сервера' });
+      return res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 };
