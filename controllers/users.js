@@ -51,10 +51,9 @@ module.exports.putchUserProfile = (req, res) => {
   User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidator: true })
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
-        return;
+        return res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
       }
-      res.status(200).res.send({ data: user });
+      return res.status(200).res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
