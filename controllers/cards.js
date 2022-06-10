@@ -7,7 +7,7 @@ const {
 } = require('../utils/error');
 
 // Запрос всех карточек
-module.exports.getCards = (_req, res) => {
+module.exports.getCards = (req, res) => {
   Card.find({})
     .populate('owner')
     .then((card) => res.send(card))
