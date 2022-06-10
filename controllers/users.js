@@ -6,9 +6,9 @@ const {
   ERROR_DEFOULT,
 } = require('../utils/error');
 
-module.exports.getUsers = (_req, res) => {
+module.exports.getUsers = (req, res) => {
   User.find({})
-    .then((user) => res.send(user))
+    .then((users) => res.send({ data: users }))
     .catch(() => {
       res.status(ERROR_DEFOULT).send({ message: 'Произошла ошибка на сервере, попробуйте еще раз' });
     });
@@ -22,7 +22,7 @@ module.exports.getUser = (req, res) => {
         res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
         return;
       }
-      res.send(user);
+      res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -38,7 +38,7 @@ module.exports.createUsers = (req, res) => {
     .then((user) => res.status(201).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(NOT_FOUND).send({ message: 'пользователь не найден' });
+        return res.status(ERROR_CODE).send({ message: 'пользователь не найден' });
       }
       return res.status(ERROR_DEFOULT).send({ message: 'Сбой на сервере' });
     });
@@ -46,18 +46,18 @@ module.exports.createUsers = (req, res) => {
 
 module.exports.putchUserProfile = (req, res) => {
   const { name, about } = req.body;
-  // const { _id } = req.user;
+  const { userId } = req.user;
   // const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidator: true })
-    .then((userProfile) => {
-      if (!userProfile) {
+  User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidator: true })
+    .then((user) => {
+      if (!user) {
         res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
         return;
       }
-      res.send(userProfile);
+      res.send({ data: user });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         return res.status(ERROR_CODE).send({ message: 'Некорректные данные' });
       }
       return res.status(ERROR_DEFOULT).send({ message: 'Ошибка сервера' });
@@ -65,18 +65,18 @@ module.exports.putchUserProfile = (req, res) => {
 };
 
 module.exports.putchUserAvatar = (req, res) => {
-  // const { _id } = req.user;
+  const { userId } = req.user;
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidator: true })
-    .then((userAvatar) => {
-      if (!userAvatar) {
+  User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidator: true })
+    .then((user) => {
+      if (!user) {
         res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
         return;
       }
-      res.send(userAvatar);
+      res.send({ data: user });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         return res.status(ERROR_CODE).send({ message: 'Некорректные данные' });
       }
       return res.status(ERROR_DEFOULT).send({ message: 'Сервер не отвечает' });
