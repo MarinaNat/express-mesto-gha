@@ -8,8 +8,10 @@ const {
 
 module.exports.getUsers = (_req, res) => {
   User.find({})
-    .then((users) => res.send(users))
-    .catch(() => res.status(ERROR_DEFOULT).send({ message: 'Ошибка сервера' }));
+    .then((user) => res.send(user))
+    .catch(() => {
+      res.status(ERROR_DEFOULT).send({ message: 'Произошла ошибка на сервере, попробуйте еще раз' });
+    });
 };
 
 module.exports.getUser = (req, res) => {
@@ -32,18 +34,13 @@ module.exports.getUser = (req, res) => {
 
 module.exports.createUsers = (req, res) => {
   const { name, about, avatar } = req.body;
-
-  User.create({
-    name,
-    about,
-    avatar,
-  })
+  User.create({ name, about, avatar })
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(NOT_FOUND).send({ message: 'Введены некорректные данные' });
+        return res.status(NOT_FOUND).send({ message: 'пользователь не найден' });
       }
-      return res.status(ERROR_DEFOULT).send({ message: 'Произошла ошибка на сервере, попробуйте еще раз' });
+      return res.status(ERROR_DEFOULT).send({ message: 'Сбой на сервере' });
     });
 };
 
