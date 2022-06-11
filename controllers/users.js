@@ -3,7 +3,7 @@ const User = require('../models/user');
 // const {
 //   ERROR_CODE,
 //   NOT_FOUND,
-//   ERROR_DEFOULT,
+//   ERROR_DEFAULT,
 // } = require('../utils/error');
 
 module.exports.getUsers = (req, res) => {

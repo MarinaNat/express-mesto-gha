@@ -3,7 +3,7 @@ const Card = require('../models/card');
 // const {
 //   ERROR_CODE,
 //   NOT_FOUND,
-//   ERROR_DEFOULT,
+//   ERROR_DEFAULT,
 // } = require('../utils/error');
 
 // Запрос всех карточек
