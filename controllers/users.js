@@ -36,7 +36,7 @@ module.exports.createUsers = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'Переданы некорректные данные' });
+        return res.status(400).send({ message: `Переданы некорректные данные ${err.message}` });
       }
       return res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
@@ -55,7 +55,7 @@ module.exports.putchUserProfile = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'Переданы некорректные данные' });
+        return res.status(400).send({ message: `Переданы некорректные данные ${err.message}` });
       }
       return res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
