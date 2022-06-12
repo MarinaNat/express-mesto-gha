@@ -74,7 +74,7 @@ module.exports.putchUserAvatar = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        return res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные' });
+        return res.status(ERROR_CODE).send({ message: `Переданы некорректные данные ${err.message}` });
       }
       return res.status(ERROR_DEFAULT).send({ message: 'На сервере произошла ошибка' });
     });
