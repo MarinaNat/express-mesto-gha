@@ -10,6 +10,7 @@ const putError = (err, req, res, next) => {
   return next(err);
 };
 
+// валидация URL
 const validateURL = (value) => {
   if (!validator.isURL(value, { require_protocol: true })) {
     throw new Error('Неверный формат ссылки');
