@@ -1,9 +1,23 @@
-const ERROR_CODE = 400;
-const NOT_FOUND = 404;
-const ERROR_DEFAULT = 500;
+const validator = require('validator');
+
+const putError = (err, req, res, next) => {
+  if (err.statusCode) {
+    return res
+      .status(err.statusCode)
+      .send({ message: err.message || 'Что-то пошло не так' });
+  }
+  res.status(500).send({ message: 'Ошибка сервера' });
+  return next(err);
+};
+
+const validateURL = (value) => {
+  if (!validator.isURL(value, { require_protocol: true })) {
+    throw new Error('Неверный формат ссылки');
+  }
+  return value;
+};
 
 module.exports = {
-  ERROR_CODE,
-  NOT_FOUND,
-  ERROR_DEFAULT,
+  putError,
+  validateURL,
 };

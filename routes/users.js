@@ -1,16 +1,49 @@
-const userRouter = require('express').Router();
+const router = require('express').Router();
+const { celebrate, Joi } = require('celebrate');
+const { validateURL } = require('../utils/error');
+
 const {
   getUsers,
-  createUsers,
   getUser,
   putchUserProfile,
   putchUserAvatar,
+  getUserProfile,
 } = require('../controllers/users');
+// const auth = require('../middlewares/auth');
 
-userRouter.get('/', getUsers);
-userRouter.get('/:userId', getUser);
-userRouter.post('/', createUsers);
-userRouter.patch('/me', putchUserProfile);
-userRouter.patch('/me/avatar', putchUserAvatar);
+// userRouter.post('/signup', createUsers);
+// userRouter.post('/signin', login);
 
-module.exports = userRouter;
+// userRouter.use(auth);
+// JWT
+router.get('/', getUsers);
+router.get('/me', getUserProfile);
+router.patch('/me', putchUserProfile);
+router.patch(
+  '/me',
+  celebrate({
+    body: Joi.object().keys({
+      name: Joi.string().min(2).max(30),
+      about: Joi.string().min(2).max(30),
+    }),
+  }),
+  putchUserProfile,
+);
+
+router.patch(
+  '/me/avatar',
+  celebrate({
+    body: Joi.object().keys({
+      avatar: Joi.string().custom(validateURL),
+    }),
+  }),
+  putchUserAvatar,
+);
+
+router.get('/:id', celebrate({
+  params: Joi.object().keys({
+    id: Joi.string().alphanum().length(24),
+  }),
+}), getUser);
+
+module.exports.userRouter = router;
