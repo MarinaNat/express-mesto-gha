@@ -8,16 +8,7 @@ const ValidationError = require('../utils/errors/validation-err');
 const AuthError = require('../utils/errors/authorized-err');
 const UserAlreadyExists = require('../utils/errors/user-already-exists');
 
-// const JWT_TOKEN = 'SECRET';
 const saltRounds = 10;
-
-// const {
-//   ERROR_CODE,
-//   NOT_FOUND,
-//   ERROR_DEFAULT,
-// } = require('../utils/error');
-// const user = require('../models/user');
-// const user = require('../models/user');
 
 const getUsers = (req, res, next) => {
   User.find({})
