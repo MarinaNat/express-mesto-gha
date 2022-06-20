@@ -25,13 +25,13 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '62a1dac70b3144cc6feef0d0',
-    // вставьте сюда _id созданного в предыдущем пункте пользователя
-  };
-  next();
-});
+// app.use((req, res, next) => {
+//   req.user = {
+//     _id: '62a1dac70b3144cc6feef0d0',
+//     // вставьте сюда _id созданного в предыдущем пункте пользователя
+//   };
+//   next();
+// });
 app.post(
   '/signin',
   celebrate({
