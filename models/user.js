@@ -6,15 +6,15 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      minlength: [2, 'Текст должен быть не короче 2 символов'],
-      maxlength: [30, 'Текст должен быть не длиннее 30 символов'],
+      minlength: 2,
+      maxlength: 30,
       default: 'Жак-Ив Кусто',
     },
     about: {
       type: String,
       default: 'Исследователь',
-      minlength: [2, 'Текст должен быть не короче 2 символов'],
-      maxlength: [30, 'Текст должен быть не длиннее 30 символов'],
+      minlength: 2,
+      maxlength: 30,
     },
     avatar: {
       type: String,
