@@ -12,7 +12,7 @@ const putError = (err, req, res, next) => {
 
 // валидация URL
 const validateURL = (value) => {
-  if (value !== value.match(/(http|https):\/\/(www\.|)\S+/g).join('')) {
+  if (value !== value.match(/^https?:\/\/(www\.)?[a-zA-Z\d-]+\.[\w\d\-.~:/?#[\]@!$&'()*+,;=]{2,}#?$/).join('')) {
     throw new Error('Неверный формат ссылки');
   }
   return value;
