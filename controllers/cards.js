@@ -30,9 +30,9 @@ const createCard = (req, res, next) => {
 
 // Удаление карточки
 const deleteCard = (req, res, next) => {
-  const { cardId } = req.params.cardId;
+  // const { cardId } = req.params.cardId;
 
-  Card.findById(cardId)
+  Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Запрашиваемая карточка не найдена');
