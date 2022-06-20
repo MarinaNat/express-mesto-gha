@@ -10,7 +10,7 @@ const { validateURL, putError } = require('./utils/error');
 
 dotenv.config();
 const { userRouter } = require('./routes/users');
-const cardRouter = require('./routes/cards');
+const { cardRouter } = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const NotFoundError = require('./middlewares/auth');
 const { Authorized } = require('./middlewares/auth');
