@@ -18,7 +18,7 @@ const {
 // JWT
 router.get('/', getUsers);
 router.get('/me', getUserProfile);
-router.patch('/me', putchUserProfile);
+// router.patch('/me', putchUserProfile);
 router.patch(
   '/me',
   celebrate({
