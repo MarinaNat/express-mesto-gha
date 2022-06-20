@@ -12,7 +12,7 @@ dotenv.config();
 const { userRouter } = require('./routes/users');
 const { cardRouter } = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
-const NotFoundError = require('./middlewares/auth');
+const NotFoundError = require('./utils/errors/not-found-err');
 const { Authorized } = require('./middlewares/auth');
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
@@ -60,23 +60,9 @@ app.post(
 
 app.use('/users', Authorized, userRouter);
 app.use('/cards', Authorized, cardRouter);
-// app.post('/signin', login);
-// app.post('/signup', createUser);
 
 // Обработчик 404-ошибки
 app.use(Authorized, (req, res, next) => next(new NotFoundError('Cтраница не найдена')));
-
-// Обработчик 500
-// app.use((err, req, res) => {
-//   const { stutus = 500, message } = err;
-//   res
-//     .status(stutus)
-//     .send({
-//       message: stutus === 500
-//         ? 'Ошибка сервера'
-//         : message,
-//     });
-// });
 
 app.use(errors());
 app.use(putError);
