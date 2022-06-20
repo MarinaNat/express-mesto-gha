@@ -1,4 +1,4 @@
-const validator = require('validator');
+// const validator = require('validator');
 
 const putError = (err, req, res, next) => {
   if (err.statusCode) {
@@ -12,7 +12,7 @@ const putError = (err, req, res, next) => {
 
 // валидация URL
 const validateURL = (value) => {
-  if (!validator.isURL(value, { require_protocol: true })) {
+  if (value !== value.match(/(http|https):\/\/(www\.|)\S+/g).join('')) {
     throw new Error('Неверный формат ссылки');
   }
   return value;

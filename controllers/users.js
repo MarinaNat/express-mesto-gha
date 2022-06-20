@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt');
-// const jwt = require('jsonwebtoken');
 
 const { genToken } = require('../middlewares/auth');
 const User = require('../models/user');
@@ -60,7 +59,6 @@ const createUser = (req, res, next) => {
 
   bcrypt.hash(password, saltRounds)
     .then((hash) => {
-      console.log('hash', hash);
       User.create({
         name,
         about,

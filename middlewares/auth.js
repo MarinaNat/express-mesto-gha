@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 const AuthError = require('../utils/errors/authorized-err');
 
-const genToken = (payload) => jwt.sign(payload, '111', { expiresIn: '7d' });
+const secretCode = '111';
+const genToken = (payload) => jwt.sign(payload, secretCode, { expiresIn: '7d' });
 
 const Authorized = (req, res, next) => {
   const auth = req.headers.authorization;
@@ -13,7 +14,7 @@ const Authorized = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, '111');
+    payload = jwt.verify(token, secretCode);
   } catch (err) {
     return next(new AuthError('jwt toten не валиден'));
   }
