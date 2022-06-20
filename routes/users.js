@@ -9,16 +9,10 @@ const {
   putchUserAvatar,
   getUserProfile,
 } = require('../controllers/users');
-// const auth = require('../middlewares/auth');
 
-// userRouter.post('/signup', createUsers);
-// userRouter.post('/signin', login);
-
-// userRouter.use(auth);
-// JWT
 router.get('/', getUsers);
 router.get('/me', getUserProfile);
-// router.patch('/me', putchUserProfile);
+
 router.patch(
   '/me',
   celebrate({
