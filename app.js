@@ -6,7 +6,7 @@ const { celebrate, Joi, errors } = require('celebrate');
 
 const helmet = require('helmet');
 const dotenv = require('dotenv');
-const { putError } = require('./utils/error');
+const { validateURL, putError } = require('./utils/error');
 
 dotenv.config();
 const { userRouter } = require('./routes/users');
@@ -44,12 +44,7 @@ app.post(
       about: Joi.string().min(2).max(30),
       email: Joi.string().required().email(),
       password: Joi.string().required(),
-      avatar: Joi.string().uri().custom((value, helper) => {
-        if (value !== value.match(/(http|https):\/\/(www\.|)\S+/g).join('')) {
-          return helper.message('Неверный формат ссылки');
-        }
-        return value;
-      }),
+      avatar: Joi.string().custom(validateURL),
     }),
   }),
   createUser,
